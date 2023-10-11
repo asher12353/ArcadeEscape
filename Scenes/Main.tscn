@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://cmhql57gownr6"]
+
+[ext_resource type="Script" path="res://Scripts/world.gd" id="1_pbtct"]
+[ext_resource type="Script" path="res://Scripts/player.gd" id="2_3plcv"]
+[ext_resource type="PackedScene" uid="uid://compb46qupd7k" path="res://Scenes/player_interactor.tscn" id="2_uk8rm"]
+[ext_resource type="PackedScene" uid="uid://didql4rreyll8" path="res://Scenes/platformer.tscn" id="3_knu8m"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8jd86"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_kqgne"]
+sky_material = SubResource("ProceduralSkyMaterial_8jd86")
+
+[sub_resource type="Environment" id="Environment_o8r0k"]
+background_mode = 2
+sky = SubResource("Sky_kqgne")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g2qxo"]
+
+[node name="world" type="Node3D" node_paths=PackedStringArray("current_character")]
+script = ExtResource("1_pbtct")
+current_character = NodePath("player")
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="stage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(20, 0.1, 20)
+
+[node name="platformer" parent="stage" node_paths=PackedStringArray("main_character", "world", "camera") instance=ExtResource("3_knu8m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2245, 1.16965, -7.05602)
+main_character = NodePath("../../player")
+world = NodePath("../..")
+camera = NodePath("../../player/head/Camera3D")
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_o8r0k")
+
+[node name="player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("2_3plcv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+shape = SubResource("CapsuleShape3D_g2qxo")
+
+[node name="head" type="Node3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="player/head"]
+current = true
+
+[node name="PlayerInteractor" parent="player/head" node_paths=PackedStringArray("player") instance=ExtResource("2_uk8rm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+player = NodePath("../..")
+
+[node name="CollisionShape3D" parent="player/head/PlayerInteractor" index="0"]
+transform = Transform3D(0.937, 0, 0, 0, 1, 0, 0, 0, 0.937, 0, 1.05385, -2.28629)
+
+[editable path="player/head/PlayerInteractor"]

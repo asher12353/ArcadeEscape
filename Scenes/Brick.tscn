@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://xf7u6stjqgoa"]
+
+[ext_resource type="Texture2D" uid="uid://bd6xed7ydai1" path="res://assets/BrickFireRed.png" id="1_br6nk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gt3h0"]
+size = Vector2(32, 32)
+
+[node name="Brick" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_br6nk")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_gt3h0")
